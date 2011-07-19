@@ -1,0 +1,11 @@
+This directory contains some example scripts that might be useful for
+running Sphinx and for updating the indexes. These are only unsupported
+examples, which might need to be changed for your specific needs / system.
+
+Available scripts are:
+
+* sphinx
+  Can be installed in /etc/init.d/sphinx for starting up the searchd.
+
+* sphinx.indexer
+  Used for (re)building the search indexes.

@@ -1,0 +1,53 @@
+#! /bin/sh
+#
+# This script can be used to (re)build the sphinx indexes.
+
+# The location of the sphinx configuration file.
+CONFIG="/etc/sphinx.conf"
+
+# The user as which to run the Sphinx indexer.
+USER="nobody"
+
+# The location of the Sphinx indexer program.
+INDEXER="/usr/bin/indexer"
+
+ROTATE="--rotate"
+INDEXES="--all"
+
+# Process the run mode.
+case "$1" in
+
+  init)
+    echo "Initializing the indexes ..."
+    ROTATE=""
+    ;;
+
+  main)
+    echo "Rebuilding the main indexes ..."
+    ;;
+
+  delta)
+    echo "Rebuilding the delta indexes ..."
+
+    # For rebuilding the delta indexes, we try to fetch the delta
+    # index from the sphinx configuration file.
+    D=`egrep '^ *index *.*delta' $CONFIG`
+    if [ "$0" = "1" ]; then
+      echo "Delta index not found in $CONFIG"
+      exit 1
+    fi
+    INDEXES=`echo $D | sed -e 's/^ *index *//' -e 's/:.*$//'`
+    ;;
+
+  *)
+    echo ""
+    echo "Usage: $0 [init|main|delta]"
+    echo ""
+    exit 1
+
+esac
+
+CMD="$INDEXER --config $CONFIG $ROTATE $INDEXES"
+
+su $USER -c "$CMD"
+

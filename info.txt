@@ -1,0 +1,14 @@
+title: Sphinx Full Text Search
+desc:  This module uses the Sphinx full text search engine for gathering Phorum search results. Please read the README carefully for setup and usage instructions.
+version: 0.9.5
+url: http://www.phorum-support.de
+author: Thomas Seifert and Maurice Makaay of the Phorum dev team
+require_version: 5.2.0
+category: search
+
+hook: search_action|mod_sphinx_do_search
+hook: search_start|mod_sphinx_change_defaults
+hook: search_redirect|mod_sphinx_search_redirect
+hook: search_output|mod_sphinx_search_output
+hook: lang|
+

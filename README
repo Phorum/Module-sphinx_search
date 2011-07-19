@@ -1,0 +1,92 @@
+Module  : Sphinx Full Text Search
+Version : 0.9.5
+Author  : Thomas Seifer <ts77@phorum.org>
+          Maurice Makaay <maurice@phorum.org>
+
+This module implements a search system that is based on the Sphinx
+full text search engine. Sphinx can be downloaded and installed from
+http://sphinxsearch.com/
+
+
+Requirements:
+-------------
+
+To get this module to work, you will need to install the Sphinx system
+on your server. This will normally not be possible in a shared hosting
+environment (because most shared hosting providers won't allow you to
+install extra third party software) and no, there is no workaround for that.
+
+You will also need to be able to run scheduled jobs (a.k.a. "cron jobs"
+on UNIX system) on the server for updating the search indexes periodically.
+
+
+Installation:
+-------------
+
+- First, you will have to install the Sphinx software. You can either
+  install this from some binary package or you can build it yourself from
+  the source package. Which way you choose, is up to you. For more
+  information on Sphinx and installing it, see http://www.sphinxsearch.com/
+
+- After installing Sphinx, you have to generate the configuration file
+  for Sphinx. A script is provided to help you with this task. Run this
+  script on the command prompt:
+
+    $ cd /path/to/your/phorum/mods/sphinx_search
+    $ php install_helper.php
+
+  Go over the settings and change them to your likings. The most important
+  one is the DATAPATH setting. The directory that you enter here should be
+  writable for the user that is going to index the database and the user
+  that is going to run the Sphinx "searchd" program. After you are done
+  with the settings, let the script generate the configuration file.
+  It will tell you in where it has stored the generated file.
+
+  If you choose to enable USE_DELTA_UPDATES, an additional table is
+  required in the Phorum database. The install helper script can
+  automatically create this table for you.
+
+- Move the generated configuration file to a useful location on the server.
+  You might for example use "/etc/sphinx.conf" on a UNIX system.
+
+- Before starting Sphinx for the first time, you need to build an initial
+  set of index files. See the Sphinx documentation for the "indexer"
+  program for more information on the indexing process. On my Linux system,
+  I used the following command:
+
+    $ /opt/sphinx/bin/indexer --config /etc/sphinx.conf --all
+
+- Now, the Sphinx "searchd" program can be started up. This is the program
+  that will accept search queries and will return the search results
+  to Phorum. I used the following command:
+
+    $ /opt/sphinx/bin/searchd --config /etc/sphinx.conf
+
+- At this point, you should be able to use the Sphinx search module in
+  Phorum. First go to Phorum's admin "Modules" screen and enable the
+  Sphinx search module. Then try a search query on your Phorum install.
+
+
+============================================================================
+============================================================================
+
+some caveats:
+  - data is stored in both phorum_search-table (not needed here) and in the
+    sphinx filesystem - this doubles the sizes needed for search even though
+    the search-table is not needed. You can clear it out every now and then.
+  - search-data is not updated in real-time - sphinx reindexes the data if
+    the indexer is called for the index, which does a full reindexing of
+    the sphinx index. There is a workaround available in sphinx
+    http://sphinxsearch.com/doc.html#live-updates which works essentially
+    with two indexes. A large one and smaller one with only the deltas
+    to the full index and which can be reindexed therefore more often,
+    but I don't use that method yet. Still, its not realtime. For me the
+    full indexing of 350,000 messages took around 5 minutes. I'd run the
+    full indexing around once a day with those times.
+
+Before you can run a search through sphinx you will need to setup sphinx
+correctly and do at least one full indexing of your phorum-data.
+Try the searching on the command-line using search from the sphinx install
+first. Also you will need to start searchd from sphinx so that the mod can
+connect to it for searching.
+

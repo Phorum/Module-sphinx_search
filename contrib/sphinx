@@ -1,0 +1,71 @@
+#! /bin/sh
+#
+# /etc/init.d/sphinx
+# This script is used to startup the Sphinx searchd program.
+
+# The location of the sphinx configuration file.
+CONFIG="/etc/sphinx.conf"
+
+# The port on which to run the Sphinx searchd.
+PORT="3312"
+
+# The user as which to run the Sphinx searchd.
+USER="nobody"
+
+# The location of the Sphinx searchd program.
+DAEMON_PATH="/usr/bin/searchd"
+
+DAEMON=`basename $DAEMON_PATH`
+DAEMON_OPTS="--port $DAEMON_PORT --config $CONFIG"
+
+case "$1" in
+  start)
+
+    if [ ! -x $DAEMON_PATH ]; then
+      echo "$DAEMON_PATH not found!";
+      exit 1;
+    fi
+
+    if [ ! -e $CONFIG ]; then
+      echo "$CONFIG not found!";
+      exit 1;
+    fi
+
+    pgrep -P 1 $DAEMON > /dev/null
+    if [ "$?" -eq "0" ]; then
+      echo "$DAEMON is already running!"
+      exit 1;
+    fi
+
+    # Cleanup lock files if those are left behind after an unclean shutdown.
+    F=`egrep '^ *path *= ' $CONFIG | sed -e 's/^ *path *= *//'`
+    for LOCK in $F; do
+      if [ -f ${LOCK}.spl ]; then
+        echo "Cleanup stale lock: ${LOCK}.spl"
+        /bin/rm ${LOCK}.spl
+      fi
+    done
+
+    su $USER -c "$DAEMON_PATH --config $CONFIG" &
+    ;;
+
+  stop)
+    pkill -P 1 $DAEMON > /dev/null
+    ;;
+
+  reload)
+    pgrep -P 1 $DAEMON > /dev/null
+    if [ "$?" -eq "1" ]; then
+      echo "$DAEMON does not seem to be running!"
+      exit 1;
+    fi
+
+    pkill -HUP -P 1 $DAEMON > /dev/null
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/sphinx {start|stop|reload}"
+    exit 1
+esac
+
+exit 0

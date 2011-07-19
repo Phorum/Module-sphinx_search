@@ -1,0 +1,62 @@
+Changelog:
+----------
+
+v0.9.5 - Okt 23, 2007
+
+    - Added Turkish language file. 
+      Thanks to Serdar of paticik.com.
+
+v0.9.4 - Okt 09, 2007
+
+    - Brought all code up to date and cleaned up the configuration
+      template a bit.
+
+    - Added some example startup and indexing scripts.
+
+    - Added an option to search for body+subject, body or subject.
+
+    - Built in some work arounds for a few problems that are in the
+      Sphinx extended query parser.
+
+v0.9.3 - Apr 25, 2007
+
+    - Added a settings screen to be able to configure the settings
+      for the module from the admin interface.
+
+    - Made the results limit configurable.
+
+    - Wrote an install helper script that can be used for easily
+      configuring Sphinx and Phorum.
+
+v0.9.2 - Apr 24, 2007 by Thomas Seifert (thomas@phorum.org)
+
+    - Limited results to 1000.
+    - Some security for the forum_id.
+
+v0.9.1 - Dec 02, 2006 by Thomas Seifert (thomas@phorum.org)
+
+    - Updated to sphinx 0.9.7, added delta indexes and a host-ip
+
+v0.9 - Oct 13, 2006 by Maurice Makaay (maurice@phorum.org)
+
+    - Return search control to the Phorum search script in case an
+      unhandled type of search is encountered (e.g. the USER_ID search
+      type for Phorum 5.2).
+
+v0.8 - Sep 13, 2006 by Maurice Makaay (maurice@phorum.org)
+
+    - little hack in SetGroups of the sphinxapi.php script to not deny
+      group 0 (is_int(0) is false, but we can have 0 for announcements)
+    - if no results are found, return empty results immediately (before,
+      no results would trigger undefined index warnings)
+    - changed example config in README to use settings inheritance
+
+v0.7 - Sep 07, 2006
+
+    - received some more testing and hence ...
+    - fix for date-order
+
+v0.5 - Jul 13, 2006
+
+    - first implementation, without admin interface
+
