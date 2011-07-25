@@ -1,11 +1,9 @@
-Module  : Sphinx Full Text Search
-Version : 0.9.5
+Module  : @TITLE@
+Version : @VERSION@
 Author  : Thomas Seifer <ts77@phorum.org>
           Maurice Makaay <maurice@phorum.org>
 
-This module implements a search system that is based on the Sphinx
-full text search engine. Sphinx can be downloaded and installed from
-http://sphinxsearch.com/
+@DESCRIPTION@
 
 
 Requirements:
